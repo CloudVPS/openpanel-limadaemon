@@ -1,0 +1,321 @@
+
+@section page
+
+<html>
+  <style type="text/css">
+  <!--
+    * { font-family: helvetica neue,helvetica,arial,sans-serif; font-size: 12px; }
+    a:link { color:#203050; }
+    a:visited { color:#305090; }
+    a:hover { color: #4080e0; }
+  -->
+  </style>
+  <head>
+    <title>$title$</title>
+  </head>
+  <body bgcolor="#c0c0d0"><center>
+    <table border="0" cellpadding="1" cellspacing="0" bgcolor="black">
+      <tr><td><table border="0" width="600" bgcolor="#f0f0f8" cellpadding="8"><tr><td>
+        <center>
+
+@section icondiv
+
+        <table border="0"><tr>
+          <td valign="top"><img src="$icon$" border="0"></td>
+          <td width="32">&nbsp;</td>
+          <td valign="top">
+
+@section /icondiv
+
+		  </td>
+		</tr></table>
+
+@section list
+
+          <table border="0" cellpadding="1" cellspacing="0" bgcolor="black"><tr><td>
+            <table border="0" bgcolor="white">
+
+@section form
+
+            <form action="$action$" method="post">
+              <table border="0">
+
+@section formelm
+
+			<tr>
+			  <td>$name$</td>
+			  <td>
+
+@section /formelm
+			  </td>
+			</tr>
+
+@section formbrk
+			<tr>
+			  <td colspan="2">
+
+@section /formbrk
+
+			  </td>
+			</tr>
+
+@section /form
+
+			  </table>
+			</form>
+			
+@section list
+
+		  <table border="0" cellpadding="1" cellspacing="0" bgcolor="black">
+			<tr><td><table border="0" width="$width$" bgcolor="white">
+
+@section litmpl
+
+			  <tr>
+				<td width="24"><a href="$href$"><img src="edit.png" border="0"/></a></td>
+				<td>
+
+@section /litmpl
+
+				</td>
+			  </tr>
+
+@section limsg
+
+            <tr>
+              <td>$from$</td>
+              <td>&nbsp;</td>
+              <td>
+                <a href="#">$subject$</a>
+              </td>
+              <td>
+                <a href="/$listid$/msgmod?mode=reject&msgid=$@$"><img src="delete.png" border="0"/></a>
+              </td>
+              <td>
+                <a href="/$listid$/msgmod?mode=approve&msgid=$@$"><img src="ok.png" border="0"/></a>
+              </td>
+            </tr>
+            
+@section liusr
+
+		    <tr>
+		      <td>$address$</td>
+		      <td>
+		        <a href="/$listaddr$/usermod?mode=approve&user=$~address$">approve</a>
+		        <a href="/$listaddr$/usermod?mode=reject&user=$~address$">reject</a>
+		      </td>
+		    </tr>
+
+
+@section liusred
+			<tr>
+			  <td>$address$</td>
+			  <td>
+			    @if $#moderator$ == 0
+			      <b>member</b></td><td> <a href="usered?offset=$#offset$&id=$~address$&mode=setmod">change</a>
+			    @else
+			      <b>moderator</b></td><td> <a href="usered?offset=$#offset$&id=$~address$&mode=unsetmod">change</a>
+			    @endif
+			  </td>
+			  <td>
+			    <a href="usered?offset=$#offset$&id=$~address$&mode=delete">delete</td>
+			  </td>
+			</tr>
+
+@section /list
+
+			</table>
+		  </td></tr></table>
+
+@section /page
+
+        </center>
+      </td></tr></table></td></tr>
+    </table>
+  </center></body>
+</html>
+
+@section login
+
+  <!-- wth -->
+  <<page title="LIMA login for $listid$">>
+    <<icondiv icon="access.png">>
+      <<form action="/$listid$/login">>
+        <<formelm name="E-mail Address">>
+          <input type="text" name="username" value="$username$"/>
+        <</formelm>>
+        <<formelm name="Password">>
+          <input type="password" name="password" />
+        <</formelm>>
+        <<formelm name="&nbsp;">>
+          <input type="submit" value="Log In" />
+        <</formelm>>
+      <</form>>
+      Create a (new) password? Click <a href="/$listid$/newpass">here</a>.
+    <</icondiv>>
+  <</page>>
+
+@section menu
+
+  <!-- scriptparser ran -->
+  <<page title="Main menu for $listid$">>
+    <<icondiv icon="monitor-on.png">>
+	  <h1>Options for $listid$ (mod='$priv_moderator$')</h1>
+	  @if $priv_moderator$ == 1
+		<a href="/$listid$/usermod">Moderate subscriptions</a><br/>
+		<a href="/$listid$/msgmod">Moderate messages</a><br/>
+	    <a href="/$listid$/usered">Manage users</a><br/>
+	  @endif
+	  @if $priv_owner$ == 1
+	    <a href="/$listid$/settings">Mailinglist settings</a><br/>
+	  @endif
+	  <br/>
+	  <a href="/$listid$/newpass?username=$~user$">Change password</a><br/>
+	  <br/>
+	  <a href="/$listid$/logout">Logout</a><br/>
+    <</icondiv>>
+  <</page>>
+  <!-- but didn't do jack -->
+
+@section template
+
+  <<page title="Message template">>
+    <form action="template" method="post">
+    <input type="hidden" name="type" value="$~type$">
+    <input type="hidden" name="mode" value="submit">
+    <h1>$listid$: $type$</h1>
+    <font face="Monaco,Courier">
+    <textarea font="Monaco,Courier" name="message" rows="16" cols="73">
+$message$
+</textarea></font>
+	<input type="submit" value="Update"></form>
+  <</page>>
+  
+  
+@section moderatemsg
+
+  <<page title="Message moderation for $listid$">>
+    <h1>New messages for $listid$</h1>
+    @set listaddr = "$listid$"
+	<<list width="600">>
+	  @loop msgs
+		<<limsg>>
+	  @endloop
+	<</list>>
+  <</page>>
+
+
+
+@section moderateusr
+
+  <<page title="User moderation for $listid$">>
+    <h1>New members for $listid$</h1>
+    @set listaddr = "$listid$"
+    @loop members
+      <!-- member -->
+      <<liusr>>
+    @endloop
+    <br/>
+    <a href="menu">Back to menu</a>
+  <</page>>
+
+
+@section usered
+
+  <<page title="Users for $listid$">>
+    @if $offset$ != 0
+      @set prev = $offset$ - 30
+      @set next = $offset$ + 30
+      <table border="0" width="100%">
+        <tr><td align="left"><a href="usered?offset=$#prev$">prev</a></td>
+            <td align="right"><a href="usered?offset=$#next$">next</a></td>
+        </tr>
+      </table>
+    @else
+      <table border="0" width="100%">
+        <tr><td align="left">prev</td>
+            <td align="right"><a href="usered?offset=30">next</a></td>
+        </tr>
+      </table>
+    @endif
+    <<list>>
+	  @loop members
+		<<liusred address="$address$" offset="$#offset$" mode="$mode$">>
+	  @endloop
+    <</list>>
+    <a href="menu">Back to menu</a>
+  <</page>>
+
+@section settings
+
+  <<page title="Settings for $listname$">>
+    <<icondiv icon="settings.png">>
+      <h1>Settings for $listname$</h1>
+      <<form action="/$listid$/settings">>
+        <input type="hidden" name="mode" value="submit">
+        <<formelm name="List name">>
+          <input name="listname" value="$listname$">
+        <</formelm>>
+        <<formelm name="Subject tag">>
+          <input name="subjecttag" value="$subjecttag$">
+        <</formelm>>
+        <<formelm name="Set Reply-to list address">>
+          <input type="checkbox" name="replyto" value="1" $check_replyto$ />
+        <</formelm>>
+        <<formelm name="Moderated subscriptions">>
+          <input type="checkbox" name="moderatedsubs" value="1" $check_moderatedsubs$/>
+        <</formelm>>
+        <<formelm name="Post moderation">>
+          <select name="moderatedposts">
+			<option value="0" $sel_open$>Open Posting</option>
+			<option value="1" $sel_membersonly$>Members Only</option>
+			<option value="2" $sel_moderated$>Full moderation</option>
+		  </select>
+		<</formelm>>
+		
+		<<formelm name="&nbsp;">>
+		  <input type="hidden" name="mode" value="submit"/>
+		  <input type="submit" vaue="Update"/>
+		<</formelm>>
+		
+		<<formbrk>>
+		  <h1>Message Templates</h1>
+		  <<list>>
+			<<litmpl href="/$listid$/template?type=confirmsub">>Subscription Confirmation<</litmpl>>
+			<<litmpl href="/$listid$/template?type=confirmunsub">>Unsubscription Confirmation<</litmpl>>
+			<<litmpl href="/$listid$/template?type=welcome">>Welcome Message<</litmpl>>
+			<<litmpl href="/$listid$/template?type=newpass">>New Password Message<</litmpl>>
+			<<litmpl href="/$listid$/template?type=notmember">>Non-member Submit Bounce Message<</litmpl>>
+		  <</list>>
+		<</formbrk>>
+      <</form>>
+    <br/>
+    <a href="menu">Back to menu</a>
+    <</icondiv>>
+  <</page>>
+
+@section newpass
+
+  <<page title="E-mail (new) Password for $listname$">>
+    <<icondiv icon="email.png">>
+      @if $success$ == 1
+        <h1>A new password has been mailed</h1>
+      @else
+        @if "$username$" == ""
+          <<form action="/$listid$/newpass">>
+            <<formelm name="E-mail address">>
+              <input name="username">
+            <</formelm>>
+			<<formelm name="&nbsp;">>
+			  <input type="submit" value="Send Password" />
+			<</formelm>>
+		  <</form>>
+		@else
+          <h1>Password change failed</h1>
+        @endif
+      @endif
+    <br/>
+    <a href="login">Back to login</a>
+    <</icondiv>>
+  <</page>>
+

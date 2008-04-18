@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.openpanel.svc.limadaemon.conf>
+  <system>
+    <eventlog>/var/log/limadaemon.log</eventlog>
+  </system>
+</com.openpanel.svc.limadaemon.conf>
