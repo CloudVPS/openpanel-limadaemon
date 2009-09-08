@@ -1,0 +1,12 @@
+Source: lima
+Section: misc
+Priority: optional
+Maintainer: OpenPanel/Panel6 packager <packages@panelsix.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: lima
+Architecture: any
+Depends: , openpanel-authd, openpanel-mod-user
+Description: lima
+ The OpenPanel mailing list manager

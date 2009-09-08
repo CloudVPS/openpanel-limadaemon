@@ -1,0 +1,14 @@
+#!/bin/sh
+# postrm framework for openpanel packages
+#
+# see: dh_installdeb(1)
+
+set -e
+
+[ $1 = purge ] && update-rc.d limadaemon remove > /dev/null
+cat /etc/postfix/master.cf | egrep -v "^lima|user=lima" > /etc/postfix/master.cf.pkgtmp && mv /etc/postfix/master.cf.pkgtmp /etc/postfix/master.cf
+#DEBHELPER#
+
+exit 0
+
+

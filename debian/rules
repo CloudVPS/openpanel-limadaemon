@@ -1,0 +1,39 @@
+#!/usr/bin/make -f
+
+
+BUILD_ROOT=$(CURDIR)/debian/tmp
+install:
+trm -rf ${BUILD_ROOT}
+tmkdir -p ${BUILD_ROOT}/var/lima
+tmkdir -p ${BUILD_ROOT}/var/lima/bin
+tinstall -m 750 -d ${BUILD_ROOT}/var/lima/lists
+tinstall -m 750 -d ${BUILD_ROOT}/var/lima/queue
+tmkdir -p ${BUILD_ROOT}/var/lima/queue/in
+tmkdir -p ${BUILD_ROOT}/var/lima/queue/moderation
+tmkdir -p ${BUILD_ROOT}/var/lima/queue/out
+tinstall -m 750 -d  ${BUILD_ROOT}/var/lima/templates
+tmkdir -p ${BUILD_ROOT}/etc/init.d
+tinstall -m 755 contrib/debian.init ${BUILD_ROOT}/etc/init.d/limadaemon
+tcp -rf limadaemon.app ${BUILD_ROOT}/var/lima/bin/
+tcp -rf limasubmit/limasubmit.app ${BUILD_ROOT}/var/lima/bin/
+tcp limacreate ${BUILD_ROOT}/var/lima/bin/
+tcp templates/* ${BUILD_ROOT}/var/lima/templates
+
+build:
+t./configure
+tmake
+tcd limasubmit && ./configure && make && cd ..
+binary-indep:
+
+binary-arch binary: build install
+	if [ -d debian/tmp ] ; then dh_install -a --sourcedir=debian/tmp ; fi
+	dh_installdocs -a
+	dh_installdeb -a
+	dh_compress -a
+	dh_fixperms -a
+	dh_shlibdeps -a
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+.PHONY: build binary binary-arch binary-indep clean install
