@@ -3,7 +3,7 @@ include makeinclude
 OBJ	= main.o limadb.o limatools.o
 
 all: limadaemon.exe limacreate limaremove
-	mkapp limadaemon
+	grace mkapp limadaemon
 	
 limadaemon.exe: $(OBJ)
 	$(LD) $(LDFLAGS) -o limadaemon.exe $(OBJ) $(LIBS)
