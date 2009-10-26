@@ -1,32 +1,27 @@
 #!/usr/bin/make -f
 
+build: build-stamp
+build-stamp:
+	./configure
+	make
+	cd limasubmit && ./configure && make && cd ..
+	touch build-stamp
 
-BUILD_ROOT=$(CURDIR)/debian/tmp
-install:
-trm -rf ${BUILD_ROOT}
-tmkdir -p ${BUILD_ROOT}/var/lima
-tmkdir -p ${BUILD_ROOT}/var/lima/bin
-tinstall -m 750 -d ${BUILD_ROOT}/var/lima/lists
-tinstall -m 750 -d ${BUILD_ROOT}/var/lima/queue
-tmkdir -p ${BUILD_ROOT}/var/lima/queue/in
-tmkdir -p ${BUILD_ROOT}/var/lima/queue/moderation
-tmkdir -p ${BUILD_ROOT}/var/lima/queue/out
-tinstall -m 750 -d  ${BUILD_ROOT}/var/lima/templates
-tmkdir -p ${BUILD_ROOT}/etc/init.d
-tinstall -m 755 contrib/debian.init ${BUILD_ROOT}/etc/init.d/limadaemon
-tcp -rf limadaemon.app ${BUILD_ROOT}/var/lima/bin/
-tcp -rf limasubmit/limasubmit.app ${BUILD_ROOT}/var/lima/bin/
-tcp limacreate ${BUILD_ROOT}/var/lima/bin/
-tcp templates/* ${BUILD_ROOT}/var/lima/templates
+install: install-stamp
+install-stamp: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	install -m 755 contrib/debian.init debian/lima/etc/init.d/limadaemon
+	cp -rf limadaemon.app debian/lima/var/lima/bin/
+	cp -rf limasubmit/limasubmit.app debian/lima/var/lima/bin/
+	cp limacreate debian/lima/var/lima/bin/
+	cp templates/* debian/lima/var/lima/templates
+	touch install-stamp
 
-build:
-t./configure
-tmake
-tcd limasubmit && ./configure && make && cd ..
-binary-indep:
+binary-indep: build install
 
-binary-arch binary: build install
-	if [ -d debian/tmp ] ; then dh_install -a --sourcedir=debian/tmp ; fi
+binary-arch: build install
 	dh_installdocs -a
 	dh_installdeb -a
 	dh_compress -a
@@ -35,5 +30,13 @@ binary-arch binary: build install
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
+
+binary: binary-indep binary-arch
+
+clean:
+	rm -f install-stamp build-stamp
+	[ ! -f makeinclude ] || make clean
+	cd limasubmit; [ ! -f makeinclude ] || make clean
+	dh_clean
 
 .PHONY: build binary binary-arch binary-indep clean install
