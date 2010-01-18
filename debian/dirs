@@ -1,3 +1,5 @@
 etc/init.d
 var/lima/bin
 var/lima/templates
+var/lima/lists
+var/lima/queue
