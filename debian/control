@@ -8,5 +8,5 @@ Standards-Version: 3.7.2
 Package: lima
 Architecture: any
 Depends: openpanel-authd, openpanel-mod-user
-Description: lima
+Description: The OpenPanel mailing list manager
  The OpenPanel mailing list manager
