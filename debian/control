@@ -1,12 +1,12 @@
 Source: lima
 Section: misc
 Priority: optional
-Maintainer: OpenPanel packager <packages@openpanel.com
+Maintainer: OpenPanel packager <packages@openpanel.com>
 Build-Depends: debhelper (>= 5), libgrace-querido-dev, libgrace-dev, libsqlite3-dev
 Standards-Version: 3.7.2
 
 Package: lima
 Architecture: any
-Depends: openpanel-authd, openpanel-mod-user
+Depends: openpanel-authd, openpanel-mod-user, ${shlibs:Depends}, ${misc:Depends}
 Description: The OpenPanel mailing list manager
  The OpenPanel mailing list manager
